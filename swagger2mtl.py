@@ -87,7 +87,7 @@ class Model(object):
         rtr += '+(NSDictionary*)JSONKeyPathsByPropertyKey{\n'
         rtr += '\treturn @{\n'
         for p in self._properties:
-            rtr += '\t\t@"{0}" : @"{1}",\n'.format(p.title, p.get_field_name())
+            rtr += '\t\t@"{0}" : @"{1}",\n'.format(p.get_field_name(), p.title)
                 
         rtr += '\t};\n'
         rtr += '}\n\n'
