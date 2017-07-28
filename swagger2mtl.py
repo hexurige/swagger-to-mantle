@@ -95,7 +95,7 @@ class Model(object):
 
     def get_header_file_content(self):
         rtr = self.get_comment(True)
-        rtr += '#import <Mantle/Mantle.h>\n\n'
+        rtr += '#import <Mantle/Mantle.h>"\n\n'
         rtr += '@interface {0} : MTLModel <MTLJSONSerializing>\n\n'.format(self.file_name)
         for p in self._properties:
             rtr += p.get_property_header()
@@ -104,7 +104,7 @@ class Model(object):
 
     def get_implement_file_content(self):
         rtr = self.get_comment(False)
-        rtr += '#import "{0}.m\n\n'.format(self.file_name)
+        rtr += '#import "{0}.h"\n\n'.format(self.file_name)
         rtr += '@implementation {0}\n\n'.format(self.file_name)
         rtr += self.get_JSONKeyPathsByPropertyKey_method()
         for p in self._properties:
