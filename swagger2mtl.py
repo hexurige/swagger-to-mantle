@@ -95,7 +95,7 @@ class Model(object):
 
     def get_header_file_content(self):
         rtr = self.get_comment(True)
-        rtr += '#import <Mantle/Mantle.h>"\n\n'
+        rtr += '#import <Mantle/Mantle.h>\n\n'
         rtr += '@interface {0} : MTLModel <MTLJSONSerializing>\n\n'.format(self.file_name)
         for p in self._properties:
             rtr += p.get_property_header()
