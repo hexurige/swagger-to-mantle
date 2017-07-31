@@ -5,12 +5,15 @@
 import json
 import os
 import time
+import sys
+import requests
+
 
 class Swagger(object):
     """Swagger"""
 
     def __init__(self, j):
-        self.__dict__ = json.loads(j)
+        self.__dict__ = j
         self.host = self.host
         self.models = []
         for definition in self.definitions:
@@ -188,13 +191,20 @@ class Property(object):
 
         return rtr
 
+#============================ *** Main *** ============================
 
-models = []
+def main(argv):
+    if len(argv) <= 1:
+        print('python3 swagger2mtl.py YOUR-URL')
+        return
 
-with open('swagger.json') as f:
-    content = f.read().replace('\n', '')
-    swagger = Swagger(content)
+    link = argv[1]
+    print('Reading Url: {0}'.format(link))
+    request = requests.get(link)
+    swagger_json = request.json()
+    
+    swagger = Swagger(swagger_json)
     swagger.create_mantles()
 
-
-    #swagger = json.loads(content, object_hook = as_swagger)
+if __name__ == "__main__":
+    main(sys.argv)
