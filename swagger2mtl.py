@@ -50,7 +50,8 @@ class Model(object):
             self._properties.append(Property(self.properties[p]))
 
     def __str__(self):
-        rtr = 'Model Title: {0} | Type: {1} | Number of Properties: {2}\n'.format(self.title, self.type, len(self._properties))
+        rtr = 'Model Title: {0} | Type: {1} | Number of Properties: {2}\n'.format(
+            self.title, self.type, len(self._properties))
         return rtr
 
     def get_comment(self, is_header):
@@ -67,7 +68,7 @@ class Model(object):
                 lines = f.readlines()
                 for line in lines:
                     rtr += line
-            
+
             rtr += '//  On {0}\n'.format(time.strftime("%d/%m/%Y"))
             rtr += '//\n'
             return rtr
@@ -84,14 +85,13 @@ class Model(object):
         f.write(self.get_implement_file_content())
         f.close()
 
-
     def get_JSONKeyPathsByPropertyKey_method(self):
         rtr = ''
         rtr += '+(NSDictionary*)JSONKeyPathsByPropertyKey{\n'
         rtr += '\treturn @{\n'
         for p in self._properties:
             rtr += '\t\t@"{0}" : @"{1}",\n'.format(p.get_field_name(), p.title)
-                
+
         rtr += '\t};\n'
         rtr += '}\n\n'
         return rtr
@@ -99,7 +99,8 @@ class Model(object):
     def get_header_file_content(self):
         rtr = self.get_comment(True)
         rtr += '#import <Mantle/Mantle.h>\n\n'
-        rtr += '@interface {0} : MTLModel <MTLJSONSerializing>\n\n'.format(self.file_name)
+        rtr += '@interface {0} : MTLModel <MTLJSONSerializing>\n\n'.format(
+            self.file_name)
         for p in self._properties:
             rtr += p.get_property_header()
         rtr += '\n@end\n'
@@ -115,6 +116,7 @@ class Model(object):
         rtr += '\n@end\n'
         return rtr
 
+
 class Property(object):
     """Property"""
 
@@ -127,7 +129,7 @@ class Property(object):
 
     def get_field_name(self):
         formatted_field_name = ''
-        name_words = str.split(self.title, '_')
+        name_words = unicode.split(self.title, '_')
         for idx, word in enumerate(name_words):
             if idx == 0:
                 formatted_field_name = formatted_field_name + word
@@ -157,7 +159,8 @@ class Property(object):
         rtr = ''
 
         if self.type == 'Int32':
-            rtr += '+(NSValueTransformer *)%sJSONTransformer{\n' % self.get_field_name()
+            rtr += '+(NSValueTransformer *)%sJSONTransformer{\n' % self.get_field_name(
+            )
             rtr += '\treturn [MTLValueTransformer transformerWithBlock:^id(id inObj) {\n'
             rtr += '\t\tif (inObj == nil) {\n'
             rtr += '\t\t\treturn [NSNumber numberWithInteger:0];\n'
@@ -168,7 +171,8 @@ class Property(object):
             rtr += '}\n\n'
 
         elif self.type == 'Decimal':
-            rtr += '+(NSValueTransformer *)%sJSONTransformer{\n' % self.get_field_name()
+            rtr += '+(NSValueTransformer *)%sJSONTransformer{\n' % self.get_field_name(
+            )
             rtr += '\treturn [MTLValueTransformer transformerWithBlock:^id(id inObj) {\n'
             rtr += '\t\tif (inObj == nil) {\n'
             rtr += '\t\t\treturn [NSNumber numberWithDouble:0.0f];\n'
@@ -179,7 +183,8 @@ class Property(object):
             rtr += '}\n\n'
 
         elif self.type == 'Boolean':
-            rtr += '+(NSValueTransformer *)%sJSONTransformer{\n' % self.get_field_name()
+            rtr += '+(NSValueTransformer *)%sJSONTransformer{\n' % self.get_field_name(
+            )
             rtr += '\treturn [MTLValueTransformer transformerWithBlock:^id(id inObj) {\n'
             rtr += '\t\tif (inObj == nil) {\n'
             rtr += '\t\t\treturn [NSNumber numberWithInteger:0];\n'
@@ -191,7 +196,8 @@ class Property(object):
 
         return rtr
 
-#============================ *** Main *** ============================
+# ============================ *** Main *** ============================
+
 
 def main(argv):
     if len(argv) <= 1:
@@ -202,9 +208,10 @@ def main(argv):
     print('Reading Url: {0}'.format(link))
     request = requests.get(link)
     swagger_json = request.json()
-    
+
     swagger = Swagger(swagger_json)
     swagger.create_mantles()
+
 
 if __name__ == "__main__":
     main(sys.argv)
